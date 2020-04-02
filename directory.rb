@@ -32,7 +32,11 @@ def input_students
   	  cohort = "WHATEVER"
   	end
     students << {name: name, cohort: cohort.to_sym}
-    puts "Now we have #{students.count} students"
+    word = "student"
+    if students.count > 1
+      word << "s"
+    end
+    puts "Now we have #{students.count} #{word}"
     name = gets[0...-1].capitalize
   end
   students
