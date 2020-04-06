@@ -67,8 +67,8 @@ def print_students_list()
       December: []
   }
 
-  @students.each { |x|
-    months[x[:cohort]].push(x[:name])
+  @students.each { |student|
+    months[student[:cohort]].push(student[:name])
   }
 
   months.each { |k,v|
@@ -91,13 +91,12 @@ def print_footer()
   puts "-------------"
 end
 
-# blahblah
-
-
+# menu
 
 def print_menu
   puts "1. Input the students"
   puts "2. Show the students"
+  puts "3. Save the file to students.csv"
   puts "9. Exit"
 end
 
@@ -113,6 +112,8 @@ def process(selection)
       input_students
     when "2"
       show_students
+    when "3"
+      save_students
     else
       puts "I don't know what you mean, try again"      
   end
@@ -125,4 +126,17 @@ def interactive_menu
   end
 end
 
+def save_students
+  file = File.open("students.csv", "w")
+  @students.each { |student|
+    student_data = [student[:name]],[student[:cohort]]
+    csv_line = student_data.join(",")
+    file.puts csv_line
+  }
+  file.close
+end
+
 interactive_menu
+
+# saving
+
