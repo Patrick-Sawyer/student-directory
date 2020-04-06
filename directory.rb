@@ -1,6 +1,19 @@
-# method to add students
+# open csv file
 
 @students = []
+
+def load_students
+  file = File.open("students.csv","r")
+  file.readlines.each{ |line|
+    name, cohort = line.chomp.split(',')
+    @students << {name: name, cohort: cohort.to_sym}
+  }
+  file.close
+end
+
+# method to add students
+
+
 
 def input_students
   puts "Please enter the names of the students"
@@ -96,7 +109,8 @@ end
 def print_menu
   puts "1. Input the students"
   puts "2. Show the students"
-  puts "3. Save the file to students.csv"
+  puts "3. Save to students.csv"
+  puts "4. Load students.csv"
   puts "9. Exit"
 end
 
@@ -114,6 +128,8 @@ def process(selection)
       show_students
     when "3"
       save_students
+    when "4"
+      load_students
     else
       puts "I don't know what you mean, try again"      
   end
