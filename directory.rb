@@ -2,8 +2,8 @@
 
 @students = []
 
-def load_students
-  file = File.open("students.csv","r")
+def load_students(filename = "students.csv")
+  file = File.open(filename,"r")
   file.readlines.each{ |line|
     name, cohort = line.chomp.split(',')
     @students << {name: name, cohort: cohort.to_sym}
@@ -11,14 +11,27 @@ def load_students
   file.close
 end
 
+def try_load_students
+  filename = ARGV.first
+  return if filename.nil?
+  if File.exists?(filename)
+    load_students(filename)
+    puts "Loaded #{@students.count} from #{filename}"
+  else
+    puts "Sorry, #{filename} doesn't exist"
+    exit
+  end
+end
+
 # method to add students
 
-
-
 def input_students
+  puts "-------------"
   puts "Please enter the names of the students"
   puts "To finish just hit return twice"
-  #array for spellcheck
+
+  # array for spellcheck
+
   months = [
       "January",
       "February",
@@ -33,26 +46,30 @@ def input_students
       "November",
       "December"
   	]
-  name = gets[0...-1].capitalize
+  name = STDIN.gets[0...-1].capitalize
+
   # get name etc
+
   while !name.empty? do
   	puts "Cohort?"
-  	cohort = gets[0...-1].capitalize
+  	cohort = STDIN.gets[0...-1].capitalize
     while !months.include? cohort
       puts "Typo. Try again. Cohort?"
-  	  cohort = gets[0...-1].capitalize
+  	  cohort = STDIN.gets[0...-1].capitalize
     end
   	if cohort.length == 0
   	  cohort = "WHATEVER"
   	end
+
     # push to array
+
     @students << {name: name, cohort: cohort.to_sym}
     word = "student"
     if @students.count != 1
       word << "s"
     end
     puts "Now we have #{@students.count} #{word}"
-    name = gets[0...-1].capitalize
+    name = STDIN.gets[0...-1].capitalize
   end
 end
 
@@ -112,6 +129,7 @@ def print_menu
   puts "3. Save to students.csv"
   puts "4. Load students.csv"
   puts "9. Exit"
+  puts "-------------"
 end
 
 def show_students()
@@ -130,6 +148,8 @@ def process(selection)
       save_students
     when "4"
       load_students
+    when "9"
+      exit
     else
       puts "I don't know what you mean, try again"      
   end
@@ -138,9 +158,11 @@ end
 def interactive_menu
   loop do
     print_menu
-    process(gets.chomp)
+    process(STDIN.gets.chomp)
   end
 end
+
+# saving
 
 def save_students
   file = File.open("students.csv", "w")
@@ -152,7 +174,10 @@ def save_students
   file.close
 end
 
+# call menu method
+
+try_load_students
 interactive_menu
 
-# saving
+
 
