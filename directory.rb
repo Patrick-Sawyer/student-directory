@@ -1,10 +1,11 @@
 # method to add students
 
+@students = []
+
 def input_students
   puts "Please enter the names of the students"
   puts "To finish just hit return twice"
-  # create empty array
-  students = []
+  #array for spellcheck
   months = [
       "January",
       "February",
@@ -19,8 +20,8 @@ def input_students
       "November",
       "December"
   	]
-  # get the first name
   name = gets[0...-1].capitalize
+  # get name etc
   while !name.empty? do
   	puts "Cohort?"
   	cohort = gets[0...-1].capitalize
@@ -31,15 +32,15 @@ def input_students
   	if cohort.length == 0
   	  cohort = "WHATEVER"
   	end
-    students << {name: name, cohort: cohort.to_sym}
+    # push to array
+    @students << {name: name, cohort: cohort.to_sym}
     word = "student"
-    if students.count > 1
+    if @students.count != 1
       word << "s"
     end
-    puts "Now we have #{students.count} #{word}"
+    puts "Now we have #{@students.count} #{word}"
     name = gets[0...-1].capitalize
   end
-  students
 end
 
 # methods to print
@@ -49,25 +50,7 @@ def print_header
   puts "-------------"
 end
 
-def print(names)
-
-# using each
-
-#  names.each_with_index do |student, index|
-#  	if student[0] == "D" && student.length < 12
-#      puts "#{index}. #{student[:name]} (#{student[:cohort]} cohort)"
-#    end
-#  end
-
-# using while
-
-#  name_index = 0
-#  while name_index < names.length do
-#    puts ((name_index + 1).to_s + ". " + names[name_index][:name] + " (" + names[name_index][:cohort].to_s + " cohort)").center(50)
-#    name_index += 1
-#  end
-
-# puts according to cohort
+def print_students_list()
 
   months = {
       January: [],
@@ -84,7 +67,7 @@ def print(names)
       December: []
   }
 
-  names.each { |x|
+  @students.each { |x|
     months[x[:cohort]].push(x[:name])
   }
 
@@ -98,20 +81,48 @@ def print(names)
 
 end
 
-def print_footer(names)
+def print_footer()
+
   word = "student"
-  if names.length() > 1
+  if @students.length() != 1
     word << "s"
   end
-  puts "Overall, we have #{names.count} great " + word
+  puts "Overall, we have #{@students.count} great " + word
+  puts "-------------"
 end
 
-# calling methods
+# blahblah
 
-students = input_students
 
-if students.count > 0
+
+def print_menu
+  puts "1. Input the students"
+  puts "2. Show the students"
+  puts "9. Exit"
+end
+
+def show_students()
   print_header
-  print(students)
-  print_footer(students)
+  print_students_list
+  print_footer
 end
+
+def process(selection)
+  case selection
+    when "1"
+      input_students
+    when "2"
+      show_students
+    else
+      puts "I don't know what you mean, try again"      
+  end
+end
+
+def interactive_menu
+  loop do
+    print_menu
+    process(gets.chomp)
+  end
+end
+
+interactive_menu
